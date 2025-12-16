@@ -1,0 +1,13 @@
+,drift_score,drift_detected
+co,0.598,True
+co2,0.021,False
+no2,0.413,True
+so2,0.86,True
+o3,0.196,False
+pm25,0.374,True
+pm10,0.409,True
+aqi_lag_1,0.264,True
+aqi_lag_3,0.203,False
+aqi_lag_6,0.142,False
+aqi_roll_mean_3,0.234,False
+aqi_roll_std_3,0.005,False

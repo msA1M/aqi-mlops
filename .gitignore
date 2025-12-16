@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Virtual environment
+venv/
+
+# MLflow
+mlruns/
+mlartifacts/
+
+# Data
+data/raw/*
+data/processed/*
+
+# OS
+.DS_Store
+
+# Env
+.env
