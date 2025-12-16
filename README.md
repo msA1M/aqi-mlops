@@ -143,4 +143,4 @@ GitHub Actions
 ✅ Status
 ✔ End-to-end MLOps
 ✔ Realistic & reproducible
-✔ Exam-safe and industry-aligned
+✔ Exam-safe and industry-aligned.
