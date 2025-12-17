@@ -11,6 +11,7 @@ mlruns/
 mlartifacts/
 
 # Data
+data
 data/raw/*
 data/processed/*
 

@@ -9,7 +9,8 @@ services:
       - "8000:8000"
     volumes:
       - ./mlruns:/app/mlruns
-    restart: always
+    environment:
+      - MLFLOW_TRACKING_URI=file:/app/mlruns
 
   ui:
     build:
@@ -19,5 +20,3 @@ services:
       - "8501:8501"
     depends_on:
       - api
-    environment:
-      - API_URL=http://api:8000/predict
