@@ -16,6 +16,7 @@ COPY api ./api
 COPY ui ./ui
 COPY feature_store ./feature_store
 COPY utils ./utils
+COPY alerts ./alerts
 
 # Copy MLflow tracking directory so the registered model can be loaded
 COPY mlruns ./mlruns
