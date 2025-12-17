@@ -1,19 +1,20 @@
-from typing import Any
-
+# api/main.py
+from alerts.email_alert import send_email_alert
 import mlflow
+import os
 import pandas as pd
 from pydantic import BaseModel
 from fastapi import FastAPI
 from api.aqi import router as aqi_router
 from api.weather import router as weather_router
 
-# Try to import email alerts; fall back to a no-op in environments (like Spaces)
-# where the alerts package might not be available.
-try:  # pragma: no cover - optional dependency
-    from alerts.email_alert import send_email_alert  # type: ignore[import]
-except ModuleNotFoundError:  # pragma: no cover
-    def send_email_alert(*args: Any, **kwargs: Any) -> None:
-        print("Email alerts disabled: 'alerts' package not available.")
+# Set MLflow tracking URI if not already set
+# Use Docker path only if /app/mlruns exists (Docker), otherwise use local path
+if not os.getenv("MLFLOW_TRACKING_URI"):
+    if os.path.exists("/app/mlruns"):
+        mlflow.set_tracking_uri("file:/app/mlruns")  # Docker
+    else:
+        mlflow.set_tracking_uri("file:./mlruns")  # Local
 
 app = FastAPI(title="Environmental Intelligence API")
 app.include_router(aqi_router)
@@ -31,6 +32,20 @@ def aqi_category(aqi: float):
     else:
         return "Hazardous", "Critical"
 
+
+# IMPORTANT: load latest registered model
+MODEL_NAME = "AQI_Predictor"
+MODEL_URI = f"models:/{MODEL_NAME}/latest"
+
+# Load model once at startup (lazy load to avoid startup errors)
+model = None
+
+def get_model():
+    """Lazy load model on first request"""
+    global model
+    if model is None:
+        model = mlflow.pyfunc.load_model(MODEL_URI)
+    return model
 
 
 class AQIInput(BaseModel):
@@ -55,10 +70,25 @@ def root():
 
 @app.post("/predict")
 def predict(data: AQIInput):
-    # This endpoint is kept for backwards compatibility but delegates
-    # to the router-based implementation in `api/aqi.py`.
-    from api.aqi import predict_aqi  # local import to avoid circular deps
-    return predict_aqi(data)
+    model = get_model()  # Load model on first request
+    df = pd.DataFrame([data.dict()])
+    prediction = float(model.predict(df)[0])
+
+    category, alert_level = aqi_category(prediction)
+
+    # Send email for Moderate and above
+    send_email_alert(
+        aqi=round(prediction, 2),
+        category=category,
+        alert_level=alert_level
+    )
+
+    return {
+        "predicted_aqi": round(prediction, 2),
+        "category": category,
+        "alert_level": alert_level,
+        "email_sent": alert_level != "Safe"
+    }
 
 
 

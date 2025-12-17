@@ -2,21 +2,76 @@
 __pycache__/
 *.pyc
 *.pyo
+*.py[cod]
+*$py.class
+*.so
+.Python
 
 # Virtual environment
 venv/
+env/
+ENV/
+.venv
 
 # MLflow
 mlruns/
 mlartifacts/
 
-# Data
-data
+# Data (keep structure, ignore large files)
 data/raw/*
+!data/raw/.gitkeep
 data/processed/*
+!data/processed/.gitkeep
+data/weather/*.csv
+!data/weather/.gitkeep
+
+# Jupyter Notebook
+.ipynb_checkpoints
+*.ipynb
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
 
 # OS
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
 
-# Env
+# Environment variables
 .env
+.env.local
+.env.*.local
+
+# Monitoring outputs (generated files)
+monitoring/drift_plots/*.png
+monitoring/drift_report.csv
+monitoring/live_inputs.csv
+monitoring/retrain_signal.csv
+shap_summary.png
+
+# Logs
+*.log
+logs/
+
+# Docker
+.dockerignore
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+
+# Distribution / packaging
+dist/
+build/
+*.egg-info/
+.eggs/

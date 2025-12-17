@@ -11,6 +11,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy application code (NO mlruns)
 COPY api ./api
+COPY alerts ./alerts
 COPY feature_store ./feature_store
 COPY utils ./utils
 

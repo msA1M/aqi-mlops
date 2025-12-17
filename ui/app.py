@@ -2,9 +2,11 @@ import streamlit as st
 import requests
 import pandas as pd
 import matplotlib.pyplot as plt
+import os
 from utils.drift import calculate_psi
 
-API_URL = "http://127.0.0.1:8000"
+# Use Docker service name when running in Docker, otherwise localhost
+API_URL = os.getenv("API_URL", "http://127.0.0.1:8000")
 
 st.set_page_config(
     page_title="Environmental Intelligence Dashboard",
