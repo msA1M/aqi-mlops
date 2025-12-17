@@ -1,57 +1,89 @@
-# monitoring/data_drift.py
-
 import pandas as pd
 from pathlib import Path
+from utils.drift import calculate_psi
 
-FEATURE_STORE_PATH = Path("feature_store/features_v1.csv")
-LIVE_DATA_PATH = Path("monitoring/live_inputs.csv")
+# -----------------------
+# PATHS
+# -----------------------
+AQI_FEATURES_PATH = "feature_store/features_v1.csv"
+WEATHER_FEATURES_PATH = "feature_store/weather/weather_features.csv"
+OUTPUT_PATH = "monitoring/drift_report.csv"
 
-DRIFT_THRESHOLD = 0.25  # 25% change
+# -----------------------
+# CONFIG
+# -----------------------
+AQI_FEATURES = ["pm25", "pm10", "no2", "o3"]
+WEATHER_FEATURES = ["temperature", "humidity", "wind_speed", "pressure"]
+
+# -----------------------
+# AQI DRIFT
+# -----------------------
+def compute_aqi_drift():
+    df = pd.read_csv(AQI_FEATURES_PATH)
+
+    records = []
+
+    for feature in AQI_FEATURES:
+        train = df[feature].iloc[:-200]
+        live = df[feature].iloc[-200:]
+
+        psi = calculate_psi(train, live)
+
+        records.append({
+            "domain": "AQI",
+            "city": "Brasilia",
+            "feature": feature,
+            "psi": round(psi, 4)
+        })
+
+    return records
 
 
-def compute_drift(train_series, live_series):
-    train_mean = train_series.mean()
-    live_mean = live_series.mean()
+# -----------------------
+# WEATHER DRIFT
+# -----------------------
+def compute_weather_drift():
+    df = pd.read_csv(WEATHER_FEATURES_PATH)
 
-    if train_mean == 0:
-        return 0
+    records = []
 
-    return abs(live_mean - train_mean) / abs(train_mean)
+    for city in df["city"].unique():
+        city_df = df[df["city"] == city]
+
+        if len(city_df) < 150:
+            continue
+
+        for feature in WEATHER_FEATURES:
+            train = city_df[feature].iloc[:-100]
+            live = city_df[feature].iloc[-100:]
+
+            psi = calculate_psi(train, live)
+
+            records.append({
+                "domain": "Weather",
+                "city": city,
+                "feature": feature,
+                "psi": round(psi, 4)
+            })
+
+    return records
 
 
+# -----------------------
+# MAIN
+# -----------------------
 def main():
-    train_df = pd.read_csv(FEATURE_STORE_PATH)
+    print("📉 Running data drift detection...")
 
-    if not LIVE_DATA_PATH.exists():
-        raise FileNotFoundError(
-            "No live data found. Create monitoring/live_inputs.csv"
-        )
+    drift_records = []
+    drift_records.extend(compute_aqi_drift())
+    drift_records.extend(compute_weather_drift())
 
-    live_df = pd.read_csv(LIVE_DATA_PATH)
+    drift_df = pd.DataFrame(drift_records)
+    drift_df.to_csv(OUTPUT_PATH, index=False)
 
-    feature_cols = [
-        c for c in train_df.columns
-        if c not in ["aqi", "city", "datetime"]
-    ]
-
-    drift_report = {}
-
-    for col in feature_cols:
-        drift_score = compute_drift(
-            train_df[col],
-            live_df[col]
-        )
-
-        drift_report[col] = {
-            "drift_score": round(drift_score, 3),
-            "drift_detected": drift_score > DRIFT_THRESHOLD
-        }
-
-    drift_df = pd.DataFrame(drift_report).T
-    drift_df.to_csv("monitoring/drift_report.csv")
-
-    print("📈 Drift report generated")
-    print(drift_df[drift_df["drift_detected"]])
+    print(f"✅ Drift report saved to {OUTPUT_PATH}")
+    print(drift_df)
 
 
 if __name__ == "__main__":

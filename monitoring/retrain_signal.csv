@@ -1,0 +1,17 @@
+domain,city,feature,severity
+AQI,Brasilia,pm25,severe
+AQI,Brasilia,pm10,severe
+AQI,Brasilia,no2,severe
+AQI,Brasilia,o3,severe
+Weather,Brasilia,temperature,severe
+Weather,Brasilia,humidity,severe
+Weather,Brasilia,wind_speed,severe
+Weather,Brasilia,pressure,severe
+Weather,Karachi,temperature,severe
+Weather,Karachi,humidity,severe
+Weather,Karachi,wind_speed,severe
+Weather,Karachi,pressure,severe
+Weather,London,temperature,severe
+Weather,London,humidity,severe
+Weather,London,wind_speed,severe
+Weather,London,pressure,severe

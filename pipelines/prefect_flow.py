@@ -1,57 +1,50 @@
-# pipelines/prefect_flow.py
-
 from prefect import flow, task
 import subprocess
+import pandas as pd
+from pathlib import Path
+
+@task
+def run(cmd):
+    subprocess.run(cmd, shell=True, check=True)
+
+@task
+def retrain_if_needed():
+    signal_path = Path("monitoring/retrain_signal.csv")
+
+    if not signal_path.exists():
+        print("✅ No retraining needed.")
+        return
+
+    df = pd.read_csv(signal_path)
+
+    print("🔁 Retraining models due to detected drift...")
+
+    if "AQI" in df["domain"].values:
+        print("→ Retraining AQI models")
+        run("python training/train_regression_models.py")
+
+    if "Weather" in df["domain"].values:
+        print("→ Retraining Weather models")
+        run("python training/train_weather_models.py")
 
 
-@task(retries=2, retry_delay_seconds=10)
-def ingest_data():
-    subprocess.run(
-        ["python", "pipelines/ingest_historical_data.py"],
-        check=True
-    )
+@flow(name="Environmental Intelligence Pipeline")
+def full_pipeline():
+    # Ingestion
+    run("python pipelines/ingest_historical_data.py")
+    run("python pipelines/ingest_weather_data.py")
 
+    # Training
+    run("python training/train_regression_models.py")
+    run("python training/train_weather_models.py")
 
-@task(retries=2, retry_delay_seconds=10)
-def build_features():
-    subprocess.run(
-        ["python", "feature_store/build_features.py"],
-        check=True
-    )
+    # Drift
+    run("python monitoring/data_drift.py")
+    run("python monitoring/retrain_decision.py")
 
-
-@task(retries=2, retry_delay_seconds=10)
-def train_models():
-    subprocess.run(
-        ["python", "training/train_regression_models.py"],
-        check=True
-    )
-
-
-@task(retries=2, retry_delay_seconds=10)
-def register_best_model():
-    subprocess.run(
-        ["python", "training/select_and_register_best_model.py"],
-        check=True
-    )
-
-
-@task(retries=1, retry_delay_seconds=5)
-def run_drift_detection():
-    subprocess.run(
-        ["python", "monitoring/data_drift.py"],
-        check=True
-    )
-
-
-@flow(name="AQI End-to-End MLOps Pipeline")
-def aqi_mlops_pipeline():
-    ingest_data()
-    build_features()
-    train_models()
-    register_best_model()
-    run_drift_detection()
+    # Conditional retraining
+    retrain_if_needed()
 
 
 if __name__ == "__main__":
-    aqi_mlops_pipeline()
+    full_pipeline()

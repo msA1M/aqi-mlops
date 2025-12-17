@@ -2,8 +2,14 @@
 from alerts.email_alert import send_email_alert
 import mlflow
 import pandas as pd
-from fastapi import FastAPI
 from pydantic import BaseModel
+from fastapi import FastAPI
+from api.aqi import router as aqi_router
+from api.weather import router as weather_router
+
+app = FastAPI(title="Environmental Intelligence API")
+app.include_router(aqi_router)
+app.include_router(weather_router)
 
 def aqi_category(aqi: float):
     if aqi <= 40:
@@ -21,8 +27,6 @@ def aqi_category(aqi: float):
 # IMPORTANT: load latest registered model
 MODEL_NAME = "AQI_Predictor"
 MODEL_URI = f"models:/{MODEL_NAME}/latest"
-
-app = FastAPI(title="AQI Prediction API")
 
 # Load model once at startup
 model = mlflow.pyfunc.load_model(MODEL_URI)

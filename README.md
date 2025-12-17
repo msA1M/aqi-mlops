@@ -1,46 +1,79 @@
-<<<<<<< HEAD
-
-=======
-🌍 AQI Prediction System — End-to-End MLOps Project
-An end-to-end Machine Learning Operations (MLOps) project for Air Quality Index (AQI) prediction, monitoring, and alerting.
-The system demonstrates realistic industry-style MLOps practices, including live data ingestion, experiment tracking, model registry, explainability, drift monitoring, orchestration, CI/CD, and containerized deployment.
+🌍 Environmental Intelligence Platform — End-to-End MLOps Project
+An end-to-end Machine Learning Operations (MLOps) system for Air Quality Index (AQI) and Weather Forecasting, designed with realistic industry-grade architecture.
+This project demonstrates the full ML lifecycle: live data ingestion, feature engineering, model training, experiment tracking, model registry, explainability, drift monitoring, orchestration, CI/CD, containerization, and interactive dashboards.
 
 🎯 Project Objective
 To build a production-style ML system that:
-Predicts AQI using historical air-quality data
-Classifies air quality into health-based categories
-Monitors live environmental data for drift
-Provides alerts when air quality degrades
-Ensures reliability via automation, testing, and CI/CD
+Predicts AQI for a target city (Brasilia)
+Forecasts weather variables (temperature, humidity, wind speed, pressure) for multiple cities
+Monitors live data for data drift
+Produces health-based alerts
+Automates pipelines using Prefect
+Ensures reliability via testing, CI/CD, and Docker
 
 🧠 System Capabilities
 ✅ Engineering & Machine Learning
-Historical AQI data ingestion (time-series)
-Feature store with lag & rolling statistics
-Multiple ML models (Ridge, Random Forest, XGBoost)
-MLflow experiment tracking & model registry
-Best-model selection and registration
-SHAP explainability for model transparency
+Time-series AQI data ingestion
+Weather data ingestion (live API)
+Feature store with:
+Lag features
+Rolling statistics
+Multiple ML models:
+Ridge Regression
+Random Forest
+MLflow:
+Experiment tracking
+Model comparison
+Model registry
+Best-model selection & registration
+SHAP explainability (AQI model)
 AQI category classification & alert logic
+
+🌦️ Weather Forecasting (New Feature)
+Predicts:
+Temperature
+Humidity
+Wind Speed
+Pressure
+Supported cities:
+Brasilia
+London
+Karachi
+Multi-target regression (one model per variable)
+Models registered independently in MLflow
+
 🌐 Live Data Integration
-Live air-quality ingestion from OpenAQ
-Robust fallback mechanism when external API is unavailable
-Live data used for monitoring & drift detection (not blind prediction)
+Weather: Open-Meteo API (stable, no API key)
+AQI: Historical + monitored live data
+Live data is used for:
+Monitoring
+Drift detection
+❌ Not blindly used for training
 📈 Monitoring & Reliability
-Data drift detection and visualization
-Alert triggering based on AQI category
-Automated ML tests (data, model performance, inference)
+Data drift detection using PSI (Population Stability Index)
+Visual drift plots in Streamlit
+Drift levels:
+PSI < 0.10 → No drift
+0.10–0.20 → Moderate drift
+0.20 → Significant drift
+Automated ML tests:
+Data validation
+Model performance regression
+Inference safety
+
 ⚙️ Systems & Ops
-FastAPI inference service
-Streamlit interactive dashboard
-Prefect orchestration for end-to-end pipelines
-Docker & Docker Compose for deployment
-GitHub Actions CI pipeline (tests + Docker builds)
-Clean project structure & .gitignore
+Component	Tool
+API	FastAPI
+Dashboard	Streamlit
+Orchestration	Prefect
+Experiment Tracking	MLflow
+Drift Detection	PSI
+Containerization	Docker
+CI/CD	GitHub Actions
 
 🏗️ Architecture Overview
             ┌──────────────┐
-            │   OpenAQ API │
+            │     API      │
             └──────┬───────┘
                    │
            Live Ingestion Pipeline
@@ -61,77 +94,88 @@ Clean project structure & .gitignore
             │     UI      │
             └─────────────┘
 
+🔁 Orchestration with Prefect (IMPORTANT)
+Prefect is the single source of automation.
+What Prefect DOES
+Ingests AQI & weather data
+Updates feature store
+Runs training pipelines (when scheduled)
+Keeps production data fresh
+
+What Streamlit DOES NOT DO
+❌ No training
+❌ No retraining
+❌ No ingestion
+❌ No scheduling
+📌 Streamlit is visualization-only
+📊 Streamlit Dashboard Behavior
+What updates dynamically
+Weather predictions (from latest registered models)
+AQI predictions (Brasilia)
+Drift plots
+PSI values
+What stays the same
+Model parameters (until Prefect retrains)
+Reference training distributions
+📌 Graphs update when Prefect ingests new data
+📌 PSI values change if data distribution shifts
+
+🔌 FastAPI Endpoints
+AQI Prediction
+POST /predict/aqi
+Weather Prediction
+GET /predict/weather?city=London
 📂 Project Structure
+
 aqi-mlops/
-├── api/                    # FastAPI inference service
-├── ui/                     # Streamlit dashboard
-├── pipelines/              # Ingestion & orchestration
-├── training/               # Training, SHAP, model selection
-├── feature_store/          # Feature engineering outputs
-├── monitoring/             # Drift detection & plots
-├── tests/                  # Automated ML tests
-├── utils/                  # AQI classification logic
-├── mlruns/                 # MLflow artifacts (local)
+├── api/                 # FastAPI routes (AQI + Weather)
+├── ui/                  # Streamlit dashboard
+├── pipelines/           # Prefect flows
+├── training/            # Model training & MLflow
+├── feature_store/       # Engineered features
+├── utils/               # Drift & helpers
+├── tests/               # Automated ML tests
+├── mlruns/              # MLflow artifacts (local)
 ├── Dockerfile.api
 ├── Dockerfile.ui
 ├── docker-compose.yml
 ├── requirements.txt
 └── README.md
-
 🚀 How to Run (Local)
-1️⃣ Create virtual environment
+
+1️⃣ Create environment
 python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
 
-2️⃣ Train models & register best model
-python training/train_regression_models.py
-python training/select_and_register_best_model.py
+2️⃣ Start Prefect
+prefect server start
+3️⃣ Run pipeline
+python pipelines/prefect_flow.py
 
-3️⃣ Run FastAPI
+4️⃣ Start API
 uvicorn api.main:app --reload
-Open: http://127.0.0.1:8000/docs
 
-4️⃣ Run Streamlit UI
+5️⃣ Run Dashboard
 streamlit run ui/app.py
+
 🐳 Docker Deployment
 docker compose build
 docker compose up
 FastAPI → http://localhost:8000/docs
 Streamlit → http://localhost:8501
-MLflow artifacts are mounted at runtime, not baked into images.
-
-🔁 Orchestration (Prefect)
-python pipelines/prefect_flow.py
-Or (optional UI):
-prefect server start
-
-🧪 Automated ML Tests
-pytest tests/
-Tests cover:
-Data schema & quality
-Model performance regression
-Inference safety
+MLflow artifacts are mounted, not baked into images
 
 🔄 CI/CD (GitHub Actions)
 On every push to main:
-Dependencies installed
-ML tests executed
-Docker images built
-Ensures reproducibility & reliability.
-
-⚠️ Design Decisions (Important)
-Live OpenAQ data is used for monitoring, not direct training
-Training and inference are decoupled
-Retraining is not automatic — triggered by drift signals
-Docker images are artifact-agnostic (CI-safe)
-
-🧑‍🏫 How to Explain This Project (One Sentence)
-“This project demonstrates a full MLOps lifecycle for AQI prediction, integrating live data ingestion, experiment tracking, explainability, drift monitoring, orchestration, CI/CD, and containerized deployment.”
+Install dependencies
+Run tests
+Build Docker images
+Validate reproducibility
 
 📌 Technologies Used
 Python 3.9
-Scikit-learn, XGBoost
+Scikit-learn
 MLflow
 SHAP
 FastAPI
@@ -139,8 +183,3 @@ Streamlit
 Prefect
 Docker & Docker Compose
 GitHub Actions
-
-✅ Status
-✔ End-to-end MLOps
-✔ Realistic & reproducible
-✔ Exam-safe and industry-aligned.

@@ -1,61 +1,41 @@
-# monitoring/visualize_drift.py
-
 import pandas as pd
 import matplotlib.pyplot as plt
 from pathlib import Path
 
-TRAIN_PATH = Path("feature_store/features_v1.csv")
-LIVE_PATH = Path("monitoring/live_inputs.csv")
+# -----------------------
+# PATHS
+# -----------------------
+DRIFT_REPORT_PATH = "monitoring/drift_report.csv"
 OUTPUT_DIR = Path("monitoring/drift_plots")
-
 OUTPUT_DIR.mkdir(exist_ok=True)
 
+# -----------------------
+# LOAD DATA
+# -----------------------
+df = pd.read_csv(DRIFT_REPORT_PATH)
 
-FEATURES_TO_PLOT = [
-    "pm25",
-    "pm10",
-    "no2",
-    "co",
-    "aqi_lag_1"
-]
+# -----------------------
+# PLOT
+# -----------------------
+for domain in df["domain"].unique():
+    domain_df = df[df["domain"] == domain]
 
+    for city in domain_df["city"].unique():
+        city_df = domain_df[domain_df["city"] == city]
 
-def plot_drift(train_df, live_df, feature):
-    plt.figure()
-    plt.hist(
-        train_df[feature],
-        bins=40,
-        alpha=0.6,
-        density=True,
-        label="Training"
-    )
-    plt.hist(
-        live_df[feature],
-        bins=20,
-        alpha=0.6,
-        density=True,
-        label="Live"
-    )
+        plt.figure(figsize=(8, 4))
+        plt.bar(city_df["feature"], city_df["psi"])
+        plt.axhline(0.1, color="orange", linestyle="--", label="Moderate Drift")
+        plt.axhline(0.2, color="red", linestyle="--", label="Severe Drift")
 
-    plt.title(f"Data Drift: {feature}")
-    plt.xlabel(feature)
-    plt.ylabel("Density")
-    plt.legend()
+        plt.title(f"{domain} Drift — {city}")
+        plt.ylabel("PSI")
+        plt.xlabel("Feature")
+        plt.legend()
+        plt.tight_layout()
 
-    output_path = OUTPUT_DIR / f"{feature}_drift.png"
-    plt.savefig(output_path)
-    plt.close()
+        output_path = OUTPUT_DIR / f"{domain}_{city}_drift.png"
+        plt.savefig(output_path)
+        plt.close()
 
-
-def main():
-    train_df = pd.read_csv(TRAIN_PATH)
-    live_df = pd.read_csv(LIVE_PATH)
-
-    for feature in FEATURES_TO_PLOT:
-        plot_drift(train_df, live_df, feature)
-
-    print("📊 Drift visualizations saved in monitoring/drift_plots/")
-
-
-if __name__ == "__main__":
-    main()
+        print(f"📊 Saved {output_path}")
