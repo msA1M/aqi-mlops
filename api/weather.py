@@ -13,27 +13,80 @@ if not os.getenv("MLFLOW_TRACKING_URI"):
     else:
         mlflow.set_tracking_uri("file:./mlruns")  # Local
 
-MODELS = {
-    "temperature": "models:/Weather_temperature/latest",
-    "humidity": "models:/Weather_humidity/latest",
-    "wind_speed": "models:/Weather_wind_speed/latest",
-    "pressure": "models:/Weather_pressure/latest",
+# Weather models are registered as Weather_Model_<target>
+# Try registry first (most reliable), then fallback to direct paths if needed
+MODEL_REGISTRY_NAMES = {
+    "temperature": "Weather_Model_temperature",
+    "humidity": "Weather_Model_humidity",
+    "wind_speed": "Weather_Model_wind_speed",
+    "pressure": "Weather_Model_pressure",
 }
+
+# Fallback: Direct model IDs from experiment 931917419341530721 (version-17 models)
+# These are the latest registered model IDs as of version-17
+WEATHER_MODEL_IDS = {
+    "temperature": "m-5d546946af9a4d1fb6f3931fb8b8ad11",
+    "humidity": "m-ea1bfddfa17d4197aebb7ea8d942dd70",
+    "wind_speed": "m-0fb51f2d25c14992bf71e4839b320ba7",
+    "pressure": "m-dbd425c1079c46ea842f8c711b02de89",
+}
+
+EXPERIMENT_ID = "931917419341530721"
 
 # Cache models to avoid reloading on every request
 _model_cache = {}
 
-def get_model(uri):
-    """Lazy load and cache models"""
-    if uri not in _model_cache:
-        try:
-            _model_cache[uri] = mlflow.pyfunc.load_model(uri)
-        except Exception as e:
+def get_model(target):
+    """Lazy load and cache models - try registry first, then direct paths"""
+    if target not in _model_cache:
+        if target not in MODEL_REGISTRY_NAMES:
             raise HTTPException(
                 status_code=503,
-                detail=f"Model loading failed: {str(e)}. Please ensure weather models are registered in MLflow."
+                detail=f"Unknown weather target: {target}"
             )
-    return _model_cache[uri]
+        
+        # Determine base path for mlruns
+        if os.path.exists("/app/mlruns"):
+            base_path = "/app/mlruns"  # Docker
+        else:
+            base_path = "./mlruns"  # Local
+        
+        # Try registry first (most reliable)
+        registry_name = MODEL_REGISTRY_NAMES[target]
+        registry_uri = f"models:/{registry_name}/latest"
+        
+        try:
+            _model_cache[target] = mlflow.pyfunc.load_model(registry_uri)
+            print(f"✅ Weather model '{target}' loaded from registry: {registry_uri}")
+        except Exception as e:
+            # Fallback: try direct filesystem path
+            print(f"⚠️ Registry load failed for {target}: {e}. Trying direct path...")
+            try:
+                model_id = WEATHER_MODEL_IDS.get(target)
+                if not model_id:
+                    raise ValueError(f"No fallback model ID for {target}")
+                
+                # Direct path to model artifacts
+                model_artifacts_path = f"{base_path}/{EXPERIMENT_ID}/models/{model_id}/artifacts"
+                
+                # Check if artifacts directory exists
+                if not os.path.exists(model_artifacts_path):
+                    raise FileNotFoundError(f"Model artifacts not found at {model_artifacts_path}")
+                
+                # Check if MLmodel file exists
+                mlmodel_path = os.path.join(model_artifacts_path, "MLmodel")
+                if not os.path.exists(mlmodel_path):
+                    raise FileNotFoundError(f"MLmodel file not found at {mlmodel_path}")
+                
+                # Load model directly from artifacts path
+                _model_cache[target] = mlflow.pyfunc.load_model(model_artifacts_path)
+                print(f"✅ Weather model '{target}' loaded from direct path: {model_artifacts_path}")
+            except Exception as e2:
+                raise HTTPException(
+                    status_code=503,
+                    detail=f"Model loading failed for {target}. Registry: {e}, Direct path: {e2}"
+                )
+    return _model_cache[target]
 
 @router.get("/weather")
 def predict_weather(city: str):
@@ -52,8 +105,8 @@ def predict_weather(city: str):
 
     predictions = {}
 
-    for target, uri in MODELS.items():
-        model = get_model(uri)
+    for target in ["temperature", "humidity", "wind_speed", "pressure"]:
+        model = get_model(target)
         predictions[target] = float(model.predict(pd.DataFrame([X]))[0])
 
     return {

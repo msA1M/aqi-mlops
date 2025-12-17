@@ -19,10 +19,14 @@ COPY utils ./utils
 COPY alerts ./alerts
 
 # Copy MLflow tracking directory so the registered model can be loaded
-COPY mlruns ./mlruns
+# Use --chown to ensure proper permissions for model files
+COPY --chown=root:root mlruns ./mlruns
 
 # MLflow will read models from this local tracking URI
 ENV MLFLOW_TRACKING_URI=file:/app/mlruns
+
+# Verify model artifacts exist (optional check)
+RUN ls -la /app/mlruns/481652201472430433/models/m-168880ff890a4a9bb3f7b210da76d290/artifacts/ || echo "Warning: Model artifacts check failed"
 
 # Hugging Face sets PORT (typically 7860); Streamlit must listen on it
 ENV PORT=7860

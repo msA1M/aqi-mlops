@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import os
 from utils.drift import calculate_psi
 
-# Use Docker service name when running in Docker, otherwise localhost
+# Use environment variable if set (for docker-compose), otherwise localhost (for single container/HF Spaces)
 API_URL = os.getenv("API_URL", "http://127.0.0.1:8000")
 
 st.set_page_config(

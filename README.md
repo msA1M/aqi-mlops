@@ -1,5 +1,5 @@
 ---
-title: Aqi_predictor
+title: AQI
 emoji: 🌍
 colorFrom: green
 colorTo: blue
