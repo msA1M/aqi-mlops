@@ -1,11 +1,19 @@
-# api/main.py
-from alerts.email_alert import send_email_alert
+from typing import Any
+
 import mlflow
 import pandas as pd
 from pydantic import BaseModel
 from fastapi import FastAPI
 from api.aqi import router as aqi_router
 from api.weather import router as weather_router
+
+# Try to import email alerts; fall back to a no-op in environments (like Spaces)
+# where the alerts package might not be available.
+try:  # pragma: no cover - optional dependency
+    from alerts.email_alert import send_email_alert  # type: ignore[import]
+except ModuleNotFoundError:  # pragma: no cover
+    def send_email_alert(*args: Any, **kwargs: Any) -> None:
+        print("Email alerts disabled: 'alerts' package not available.")
 
 app = FastAPI(title="Environmental Intelligence API")
 app.include_router(aqi_router)
