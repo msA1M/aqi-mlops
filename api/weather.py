@@ -37,7 +37,7 @@ EXPERIMENT_ID = "931917419341530721"
 _model_cache = {}
 
 def get_model(target):
-    """Lazy load and cache models - try registry first, then direct paths"""
+    """Lazy load and cache models - use direct paths (registry has path resolution issues)"""
     if target not in _model_cache:
         if target not in MODEL_REGISTRY_NAMES:
             raise HTTPException(
@@ -51,40 +51,43 @@ def get_model(target):
         else:
             base_path = "./mlruns"  # Local
         
-        # Try registry first (most reliable)
-        registry_name = MODEL_REGISTRY_NAMES[target]
-        registry_uri = f"models:/{registry_name}/latest"
+        # Use direct filesystem path (registry has issues with absolute paths in metadata)
+        model_id = WEATHER_MODEL_IDS.get(target)
+        if not model_id:
+            raise HTTPException(
+                status_code=503,
+                detail=f"No model ID configured for {target}"
+            )
+        
+        # Direct path to model artifacts
+        model_artifacts_path = f"{base_path}/{EXPERIMENT_ID}/models/{model_id}/artifacts"
         
         try:
-            _model_cache[target] = mlflow.pyfunc.load_model(registry_uri)
-            print(f"✅ Weather model '{target}' loaded from registry: {registry_uri}")
+            # Check if artifacts directory exists
+            if not os.path.exists(model_artifacts_path):
+                raise FileNotFoundError(f"Model artifacts not found at {model_artifacts_path}")
+            
+            # Check if MLmodel file exists
+            mlmodel_path = os.path.join(model_artifacts_path, "MLmodel")
+            if not os.path.exists(mlmodel_path):
+                raise FileNotFoundError(f"MLmodel file not found at {mlmodel_path}")
+            
+            # Load model directly from artifacts path
+            _model_cache[target] = mlflow.pyfunc.load_model(model_artifacts_path)
+            print(f"✅ Weather model '{target}' loaded from direct path: {model_artifacts_path}")
         except Exception as e:
-            # Fallback: try direct filesystem path
-            print(f"⚠️ Registry load failed for {target}: {e}. Trying direct path...")
+            # Fallback: try registry (may fail due to absolute paths in metadata)
+            print(f"⚠️ Direct path load failed for {target}: {e}. Trying registry...")
             try:
-                model_id = WEATHER_MODEL_IDS.get(target)
-                if not model_id:
-                    raise ValueError(f"No fallback model ID for {target}")
-                
-                # Direct path to model artifacts
-                model_artifacts_path = f"{base_path}/{EXPERIMENT_ID}/models/{model_id}/artifacts"
-                
-                # Check if artifacts directory exists
-                if not os.path.exists(model_artifacts_path):
-                    raise FileNotFoundError(f"Model artifacts not found at {model_artifacts_path}")
-                
-                # Check if MLmodel file exists
-                mlmodel_path = os.path.join(model_artifacts_path, "MLmodel")
-                if not os.path.exists(mlmodel_path):
-                    raise FileNotFoundError(f"MLmodel file not found at {mlmodel_path}")
-                
-                # Load model directly from artifacts path
-                _model_cache[target] = mlflow.pyfunc.load_model(model_artifacts_path)
-                print(f"✅ Weather model '{target}' loaded from direct path: {model_artifacts_path}")
+                registry_name = MODEL_REGISTRY_NAMES[target]
+                registry_uri = f"models:/{registry_name}/latest"
+                _model_cache[target] = mlflow.pyfunc.load_model(registry_uri)
+                print(f"✅ Weather model '{target}' loaded from registry: {registry_uri}")
             except Exception as e2:
                 raise HTTPException(
                     status_code=503,
-                    detail=f"Model loading failed for {target}. Registry: {e}, Direct path: {e2}"
+                    detail=f"Model loading failed for {target}. Direct path: {e}, Registry: {e2}. "
+                           f"Please ensure model artifacts exist at {model_artifacts_path}"
                 )
     return _model_cache[target]
 
