@@ -14,7 +14,9 @@ except ModuleNotFoundError:  # pragma: no cover
 
 router = APIRouter(prefix="/predict", tags=["AQI"])
 
-MODEL_URI = "models:/AQI_Predictor/latest"
+# Load model directly from bundled MLflow directory inside the image
+# (this path exists because `mlruns` is copied into /app in the Dockerfile)
+MODEL_URI = "mlruns/models/AQI_Predictor/version-6"
 model = mlflow.pyfunc.load_model(MODEL_URI)
 
 

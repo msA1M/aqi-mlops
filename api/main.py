@@ -32,13 +32,6 @@ def aqi_category(aqi: float):
         return "Hazardous", "Critical"
 
 
-# IMPORTANT: load latest registered model
-MODEL_NAME = "AQI_Predictor"
-MODEL_URI = f"models:/{MODEL_NAME}/latest"
-
-# Load model once at startup
-model = mlflow.pyfunc.load_model(MODEL_URI)
-
 
 class AQIInput(BaseModel):
     co: float
@@ -62,24 +55,10 @@ def root():
 
 @app.post("/predict")
 def predict(data: AQIInput):
-    df = pd.DataFrame([data.dict()])
-    prediction = float(model.predict(df)[0])
-
-    category, alert_level = aqi_category(prediction)
-
-    # Send email for Moderate and above
-    send_email_alert(
-        aqi=round(prediction, 2),
-        category=category,
-        alert_level=alert_level
-    )
-
-    return {
-        "predicted_aqi": round(prediction, 2),
-        "category": category,
-        "alert_level": alert_level,
-        "email_sent": alert_level != "Safe"
-    }
+    # This endpoint is kept for backwards compatibility but delegates
+    # to the router-based implementation in `api/aqi.py`.
+    from api.aqi import predict_aqi  # local import to avoid circular deps
+    return predict_aqi(data)
 
 
 
