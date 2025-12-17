@@ -1,0 +1,22 @@
+artifact_path: file:///Users/muhammadsaim/aqi-mlops%20copy/mlruns/931917419341530721/models/m-464f1468d78444edb5ae2b5495a6a3bf/artifacts
+flavors:
+  python_function:
+    env:
+      conda: conda.yaml
+      virtualenv: python_env.yaml
+    loader_module: mlflow.sklearn
+    model_path: model.pkl
+    predict_fn: predict
+    python_version: 3.9.6
+  sklearn:
+    code: null
+    pickled_model: model.pkl
+    serialization_format: cloudpickle
+    sklearn_version: 1.6.1
+mlflow_version: 3.1.4
+model_id: m-464f1468d78444edb5ae2b5495a6a3bf
+model_size_bytes: 8360561
+model_uuid: m-464f1468d78444edb5ae2b5495a6a3bf
+prompts: null
+run_id: c7528d35b3a64bada65575c7d9d34a31
+utc_time_created: '2025-12-16 21:06:11.389977'

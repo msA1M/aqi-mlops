@@ -1,3 +1,23 @@
+---
+title: Aqi_predictor
+emoji: 🌍
+colorFrom: green
+colorTo: blue
+sdk: docker
+sdk_version: "0.0.1"
+app_file: app.py
+pinned: false
+---
+
+## Environmental Intelligence Dashboard – AQI & Weather
+
+This Space runs a Docker container that serves:
+
+- A **FastAPI** backend exposing AQI and weather prediction endpoints.
+- A **Streamlit** frontend providing an interactive dashboard for AQI prediction, weather forecasts, and data drift monitoring.
+
+The container is built from the `Dockerfile` in this repository and uses pre-trained models stored in the bundled `mlruns` directory via MLflow.
+
 🌍 Environmental Intelligence Platform — End-to-End MLOps Project
 An end-to-end Machine Learning Operations (MLOps) system for Air Quality Index (AQI) and Weather Forecasting, designed with realistic industry-grade architecture.
 This project demonstrates the full ML lifecycle: live data ingestion, feature engineering, model training, experiment tracking, model registry, explainability, drift monitoring, orchestration, CI/CD, containerization, and interactive dashboards.

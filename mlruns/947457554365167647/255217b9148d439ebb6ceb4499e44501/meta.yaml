@@ -1,0 +1,14 @@
+artifact_uri: file:///Users/muhammadsaim/aqi-mlops/mlruns/947457554365167647/255217b9148d439ebb6ceb4499e44501/artifacts
+end_time: 1765836420110
+entry_point_name: ''
+experiment_id: '947457554365167647'
+lifecycle_stage: active
+run_id: 255217b9148d439ebb6ceb4499e44501
+run_name: Ridge_Baseline
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1765836420105
+status: 4
+tags: []
+user_id: muhammadsaim

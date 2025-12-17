@@ -1,0 +1,14 @@
+artifact_uri: file:///Users/muhammadsaim/aqi-mlops%20copy/mlruns/931917419341530721/089d523514844d68bf22265f3789f84c/artifacts
+end_time: 1765937108521
+entry_point_name: ''
+experiment_id: '931917419341530721'
+lifecycle_stage: active
+run_id: 089d523514844d68bf22265f3789f84c
+run_name: RandomForest_temperature
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1765937107163
+status: 3
+tags: []
+user_id: muhammadsaim

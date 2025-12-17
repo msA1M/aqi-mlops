@@ -1,0 +1,14 @@
+artifact_uri: file:///Users/muhammadsaim/aqi-mlops/mlruns/481652201472430433/94f763814ae24ba191dc0d46b8b65835/artifacts
+end_time: 1765919992021
+entry_point_name: ''
+experiment_id: '481652201472430433'
+lifecycle_stage: active
+run_id: 94f763814ae24ba191dc0d46b8b65835
+run_name: Random_Forest
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1765919986192
+status: 3
+tags: []
+user_id: muhammadsaim

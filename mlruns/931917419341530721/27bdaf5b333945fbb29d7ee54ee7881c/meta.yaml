@@ -1,0 +1,14 @@
+artifact_uri: file:///Users/muhammadsaim/aqi-mlops%20copy/mlruns/931917419341530721/27bdaf5b333945fbb29d7ee54ee7881c/artifacts
+end_time: 1765937093424
+entry_point_name: ''
+experiment_id: '931917419341530721'
+lifecycle_stage: active
+run_id: 27bdaf5b333945fbb29d7ee54ee7881c
+run_name: RandomForest_pressure
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1765937092040
+status: 3
+tags: []
+user_id: muhammadsaim

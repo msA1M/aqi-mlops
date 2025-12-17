@@ -1,0 +1,14 @@
+artifact_uri: file:///Users/muhammadsaim/aqi-mlops/mlruns/481652201472430433/a1b5f4d9a304423fb4d878a16b30c0a8/artifacts
+end_time: 1765919993532
+entry_point_name: ''
+experiment_id: '481652201472430433'
+lifecycle_stage: active
+run_id: a1b5f4d9a304423fb4d878a16b30c0a8
+run_name: XGBoost
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1765919992024
+status: 3
+tags: []
+user_id: muhammadsaim

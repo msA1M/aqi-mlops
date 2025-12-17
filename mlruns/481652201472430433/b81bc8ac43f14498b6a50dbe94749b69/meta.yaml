@@ -1,0 +1,14 @@
+artifact_uri: file:///Users/muhammadsaim/aqi-mlops/mlruns/481652201472430433/b81bc8ac43f14498b6a50dbe94749b69/artifacts
+end_time: 1765836757250
+entry_point_name: ''
+experiment_id: '481652201472430433'
+lifecycle_stage: active
+run_id: b81bc8ac43f14498b6a50dbe94749b69
+run_name: Ridge_Regression
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1765836757239
+status: 4
+tags: []
+user_id: muhammadsaim
