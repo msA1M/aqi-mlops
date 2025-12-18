@@ -1,0 +1,10 @@
+artifact_location: file:///Users/muhammadsaim/aqi-mlops/mlruns/481652201472430433/models/m-ff793a17639b492fb205572c8ea0d1b1/artifacts
+creation_timestamp: 1766023666403
+experiment_id: '481652201472430433'
+last_updated_timestamp: 1766023667887
+model_id: m-ff793a17639b492fb205572c8ea0d1b1
+model_type: null
+name: model
+source_run_id: f561e85024774220aa4fb4e82c08b5da
+status: 2
+status_message: null
