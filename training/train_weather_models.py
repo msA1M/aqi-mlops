@@ -51,7 +51,22 @@ def log_metrics(y_true, y_pred):
 # -----------------------
 def train_model(df, target, model_name, model):
     X = df.drop(columns=DROP_COLS + TARGETS)
-    X = X.replace([np.inf, -np.inf], np.nan).dropna()
+    X = X.replace([np.inf, -np.inf], np.nan)
+    
+    # Remove low variance features
+    variance_threshold = 1e-8
+    feature_variances = X.var()
+    low_variance_features = feature_variances[feature_variances < variance_threshold].index.tolist()
+    if low_variance_features:
+        X = X.drop(columns=low_variance_features)
+    
+    # Clip extreme values
+    for col in X.columns:
+        q01 = X[col].quantile(0.001)
+        q99 = X[col].quantile(0.999)
+        X[col] = X[col].clip(lower=q01, upper=q99)
+    
+    X = X.dropna()
     y = df.loc[X.index, target]
 
     X_train, X_test, y_train, y_test = train_test_split(
@@ -59,8 +74,11 @@ def train_model(df, target, model_name, model):
     )
 
     with mlflow.start_run(run_name=f"{model_name}_{target}"):
-        model.fit(X_train, y_train)
-        preds = model.predict(X_test)
+        import warnings
+        with warnings.catch_warnings():
+            warnings.filterwarnings('ignore', category=RuntimeWarning)
+            model.fit(X_train, y_train)
+            preds = model.predict(X_test)
 
         log_metrics(y_test, preds)
 
@@ -80,10 +98,10 @@ def main():
 
     mlflow.set_experiment(EXPERIMENT_NAME)
 
-    # Baseline: Ridge
+    # Baseline: Ridge with better numerical stability
     ridge = Pipeline([
         ("scaler", StandardScaler()),
-        ("model", Ridge(alpha=1.0))
+        ("model", Ridge(alpha=1.0, solver='auto', max_iter=1000))
     ])
 
     # Improved: Random Forest

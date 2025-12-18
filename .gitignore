@@ -14,7 +14,16 @@ ENV/
 .venv
 
 # MLflow
-mlruns/
+# Exclude most mlruns but keep models for deployment
+mlruns/*
+!mlruns/models/
+mlruns/models/*
+!mlruns/models/**/version-*/
+mlruns/models/**/version-*/*
+!mlruns/models/**/version-*/MLmodel
+!mlruns/models/**/version-*/**/*.pkl
+!mlruns/models/**/version-*/**/model.pkl
+!mlruns/models/**/meta.yaml
 mlartifacts/
 
 # Data (keep structure, ignore large files)
