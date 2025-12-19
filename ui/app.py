@@ -296,20 +296,34 @@ elif page == "Model Explainability":
         
         with st.spinner("Loading model and computing SHAP values..."):
             try:
-                # Try registry first, but fallback silently if it fails
-                model = None
-                try:
-                    model = mlflow.pyfunc.load_model(f"models:/{MODEL_NAME}/latest")
-                except Exception:
-                    # Registry failed, use fallback to direct path
-                    pass
+                # Always use direct path fallback (registry has path issues in Docker)
+                # This is more reliable for Railway deployment
+                model_artifacts_path = f"{base_path}/{FALLBACK_EXPERIMENT_ID}/models/{FALLBACK_MODEL_ID}/artifacts"
                 
-                # If registry load failed, use direct path
-                if model is None:
-                    model_artifacts_path = f"{base_path}/{FALLBACK_EXPERIMENT_ID}/models/{FALLBACK_MODEL_ID}/artifacts"
-                    if not os.path.exists(model_artifacts_path):
-                        raise FileNotFoundError(f"Model artifacts not found at {model_artifacts_path}. Please ensure models are available.")
-                    model = mlflow.pyfunc.load_model(model_artifacts_path)
+                # Check if path exists
+                if not os.path.exists(model_artifacts_path):
+                    # Try alternative model IDs if the primary one doesn't exist
+                    alternative_models = [
+                        "m-168880ff890a4a9bb3f7b210da76d290",  # version-3
+                        "m-c297723a541641148db3c89191f0262e",  # version-1/2
+                    ]
+                    
+                    model_found = False
+                    for alt_model_id in alternative_models:
+                        alt_path = f"{base_path}/{FALLBACK_EXPERIMENT_ID}/models/{alt_model_id}/artifacts"
+                        if os.path.exists(alt_path):
+                            model_artifacts_path = alt_path
+                            model_found = True
+                            break
+                    
+                    if not model_found:
+                        raise FileNotFoundError(
+                            f"Model artifacts not found. Checked: {model_artifacts_path}. "
+                            f"Please ensure models are available in {base_path}."
+                        )
+                
+                # Load model from direct path
+                model = mlflow.pyfunc.load_model(model_artifacts_path)
                 
                 # Load feature data
                 df = pd.read_csv("feature_store/features_v1.csv")
@@ -380,11 +394,24 @@ elif page == "Model Explainability":
                     except Exception as e:
                         st.info(f"Waterfall plot not available: {str(e)}")
                     
+            except FileNotFoundError as e:
+                st.error(f"Model not found: {str(e)}")
+                st.info("💡 **Troubleshooting:**")
+                st.info("1. Ensure model artifacts are available in the mlruns directory")
+                st.info("2. Check that the model was trained and artifacts were saved")
+                st.info("3. Verify the mlruns volume is mounted correctly in Docker")
             except Exception as e:
-                st.error(f"Error loading model or computing SHAP: {str(e)}")
-                st.info("Make sure the model is registered in MLflow and SHAP is installed.")
-                import traceback
-                st.code(traceback.format_exc())
+                error_msg = str(e)
+                # Filter out confusing local path errors
+                if "/Users/muhammadsaim/aqi-mlops" in error_msg:
+                    st.error("Error loading model: Registry metadata contains invalid paths.")
+                    st.info("💡 The model is being loaded from direct path instead. If this error persists, check model artifacts.")
+                else:
+                    st.error(f"Error loading model or computing SHAP: {error_msg}")
+                st.info("Make sure SHAP is installed: `pip install shap`")
+                if st.checkbox("Show detailed error"):
+                    import traceback
+                    st.code(traceback.format_exc())
     
     except FileNotFoundError:
         st.error("Feature store not found. Please run feature engineering first.")
