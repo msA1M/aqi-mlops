@@ -4,6 +4,8 @@ __pycache__/
 *$py.class
 *.so
 .Python
+*.pyc
+*.pyo
 build/
 develop-eggs/
 dist/
@@ -34,17 +36,43 @@ ENV/
 *.swo
 *~
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
 
 # Jupyter Notebook
 .ipynb_checkpoints
+*.ipynb
 
 # MLflow
-mlruns/
+# Exclude most mlruns but keep models for deployment
+mlruns/*
+!mlruns/models/
+mlruns/models/*
+!mlruns/models/**/version-*/
+mlruns/models/**/version-*/*
+!mlruns/models/**/version-*/MLmodel
+!mlruns/models/**/version-*/**/*.pkl
+!mlruns/models/**/version-*/**/model.pkl
+!mlruns/models/**/meta.yaml
+mlartifacts/
 .mlflow/
+
+# Data (keep structure, ignore large files)
+data/raw/*
+!data/raw/.gitkeep
+data/processed/*
+!data/processed/.gitkeep
+data/weather/*.csv
+!data/weather/.gitkeep
 
 # Environment variables
 .env
 .env.local
+.env.*.local
 
 # Logs
 *.log
@@ -52,10 +80,6 @@ logs/
 
 # Docker
 .dockerignore
-
-# OS
-.DS_Store
-Thumbs.db
 
 # Testing
 .pytest_cache/
@@ -96,3 +120,15 @@ temp/
 # PDF (uncomment if you don't want to track PDFs)
 # *.pdf
 
+# Monitoring outputs (generated files)
+monitoring/drift_plots/*.png
+monitoring/drift_report.csv
+monitoring/live_inputs.csv
+monitoring/retrain_signal.csv
+shap_summary.png
+
+# Distribution / packaging
+dist/
+build/
+*.egg-info/
+.eggs/

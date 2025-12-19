@@ -1,0 +1,14 @@
+artifact_uri: file:///Users/muhammadsaim/aqi-mlops%20copy/mlruns/931917419341530721/8a0b007ff8f1482c9494ddf5b3f56a4f/artifacts
+end_time: 1766023711327
+entry_point_name: ''
+experiment_id: '931917419341530721'
+lifecycle_stage: active
+run_id: 8a0b007ff8f1482c9494ddf5b3f56a4f
+run_name: Ridge_wind_speed
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1766023710138
+status: 3
+tags: []
+user_id: muhammadsaim

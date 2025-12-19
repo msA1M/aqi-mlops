@@ -1,0 +1,14 @@
+artifact_uri: file:///Users/muhammadsaim/aqi-mlops%20copy/mlruns/931917419341530721/cfb6195a857b462cbb049a2f6e2dc07f/artifacts
+end_time: 1765920156542
+entry_point_name: ''
+experiment_id: '931917419341530721'
+lifecycle_stage: active
+run_id: cfb6195a857b462cbb049a2f6e2dc07f
+run_name: RandomForest_humidity
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1765920155201
+status: 3
+tags: []
+user_id: muhammadsaim

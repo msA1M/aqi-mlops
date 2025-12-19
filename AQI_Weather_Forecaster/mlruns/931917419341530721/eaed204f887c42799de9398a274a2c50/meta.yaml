@@ -1,0 +1,14 @@
+artifact_uri: file:///Users/muhammadsaim/aqi-mlops%20copy/mlruns/931917419341530721/eaed204f887c42799de9398a274a2c50/artifacts
+end_time: 1765984122563
+entry_point_name: ''
+experiment_id: '931917419341530721'
+lifecycle_stage: active
+run_id: eaed204f887c42799de9398a274a2c50
+run_name: RandomForest_wind_speed
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1765984121180
+status: 3
+tags: []
+user_id: muhammadsaim

@@ -1,0 +1,14 @@
+artifact_uri: file:///Users/muhammadsaim/aqi-mlops%20copy/mlruns/931917419341530721/94d73458f6b84bc497da47a3501294d9/artifacts
+end_time: 1765984118711
+entry_point_name: ''
+experiment_id: '931917419341530721'
+lifecycle_stage: active
+run_id: 94d73458f6b84bc497da47a3501294d9
+run_name: Ridge_humidity
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1765984117621
+status: 3
+tags: []
+user_id: muhammadsaim

@@ -1,0 +1,14 @@
+artifact_uri: file:///Users/muhammadsaim/aqi-mlops%20copy/mlruns/931917419341530721/a477ccd6555d48fcb8622fbd4ceda439/artifacts
+end_time: 1765984123670
+entry_point_name: ''
+experiment_id: '931917419341530721'
+lifecycle_stage: active
+run_id: a477ccd6555d48fcb8622fbd4ceda439
+run_name: Ridge_pressure
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1765984122566
+status: 3
+tags: []
+user_id: muhammadsaim

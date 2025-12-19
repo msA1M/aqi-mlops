@@ -1,0 +1,73 @@
+{
+  "test_case_1": {
+    "co": 0.4,
+    "co2": 410.0,
+    "no2": 20.0,
+    "so2": 5.0,
+    "o3": 30.0,
+    "pm25": 45.0,
+    "pm10": 70.0,
+    "aqi_lag_1": 85.0,
+    "aqi_lag_3": 80.0,
+    "aqi_lag_6": 75.0,
+    "aqi_roll_mean_3": 82.0,
+    "aqi_roll_std_3": 4.1
+  },
+  "test_case_2_good_air": {
+    "co": 0.2,
+    "co2": 380.0,
+    "no2": 10.0,
+    "so2": 2.0,
+    "o3": 20.0,
+    "pm25": 15.0,
+    "pm10": 25.0,
+    "aqi_lag_1": 35.0,
+    "aqi_lag_3": 32.0,
+    "aqi_lag_6": 30.0,
+    "aqi_roll_mean_3": 33.0,
+    "aqi_roll_std_3": 2.5
+  },
+  "test_case_3_moderate": {
+    "co": 0.6,
+    "co2": 450.0,
+    "no2": 35.0,
+    "so2": 8.0,
+    "o3": 50.0,
+    "pm25": 60.0,
+    "pm10": 90.0,
+    "aqi_lag_1": 75.0,
+    "aqi_lag_3": 70.0,
+    "aqi_lag_6": 65.0,
+    "aqi_roll_mean_3": 70.0,
+    "aqi_roll_std_3": 5.0
+  },
+  "test_case_4_unhealthy": {
+    "co": 1.2,
+    "co2": 520.0,
+    "no2": 60.0,
+    "so2": 15.0,
+    "o3": 80.0,
+    "pm25": 100.0,
+    "pm10": 150.0,
+    "aqi_lag_1": 130.0,
+    "aqi_lag_3": 125.0,
+    "aqi_lag_6": 120.0,
+    "aqi_roll_mean_3": 125.0,
+    "aqi_roll_std_3": 8.0
+  },
+  "test_case_5_hazardous": {
+    "co": 2.5,
+    "co2": 600.0,
+    "no2": 90.0,
+    "so2": 30.0,
+    "o3": 120.0,
+    "pm25": 150.0,
+    "pm10": 200.0,
+    "aqi_lag_1": 180.0,
+    "aqi_lag_3": 175.0,
+    "aqi_lag_6": 170.0,
+    "aqi_roll_mean_3": 175.0,
+    "aqi_roll_std_3": 12.0
+  }
+}
+

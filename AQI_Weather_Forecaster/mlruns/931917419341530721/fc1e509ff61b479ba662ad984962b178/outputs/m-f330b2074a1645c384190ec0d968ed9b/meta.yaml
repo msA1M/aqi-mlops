@@ -1,0 +1,6 @@
+destination_id: m-f330b2074a1645c384190ec0d968ed9b
+destination_type: MODEL_OUTPUT
+source_id: m-f330b2074a1645c384190ec0d968ed9b
+source_type: RUN_OUTPUT
+step: 0
+tags: {}

@@ -1,0 +1,14 @@
+artifact_uri: file:///Users/muhammadsaim/aqi-mlops%20copy/mlruns/931917419341530721/a344773237ed432ca1badb6de405989f/artifacts
+end_time: 1765937565270
+entry_point_name: ''
+experiment_id: '931917419341530721'
+lifecycle_stage: active
+run_id: a344773237ed432ca1badb6de405989f
+run_name: Ridge_temperature
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1765937563898
+status: 3
+tags: []
+user_id: muhammadsaim

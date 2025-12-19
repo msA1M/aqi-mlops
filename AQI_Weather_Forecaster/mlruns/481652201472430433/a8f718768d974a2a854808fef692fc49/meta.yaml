@@ -1,0 +1,14 @@
+artifact_uri: file:///Users/muhammadsaim/aqi-mlops/mlruns/481652201472430433/a8f718768d974a2a854808fef692fc49/artifacts
+end_time: 1766023771301
+entry_point_name: ''
+experiment_id: '481652201472430433'
+lifecycle_stage: active
+run_id: a8f718768d974a2a854808fef692fc49
+run_name: Gradient_Boosting
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1766023764951
+status: 3
+tags: []
+user_id: muhammadsaim
