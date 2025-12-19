@@ -1,0 +1,18 @@
+aliases: []
+creation_timestamp: 1765837702555
+current_stage: None
+deployment_job_state: null
+description: null
+last_updated_timestamp: 1765837702555
+metrics: null
+model_id: m-c297723a541641148db3c89191f0262e
+name: AQI_Predictor
+params: null
+run_id: 67113caa1d9b40ee962983479c323605
+run_link: null
+source: models:/m-c297723a541641148db3c89191f0262e
+status: READY
+status_message: null
+storage_location: file:///Users/muhammadsaim/aqi-mlops copy/mlruns/481652201472430433/models/m-c297723a541641148db3c89191f0262e/artifacts
+user_id: null
+version: 1
