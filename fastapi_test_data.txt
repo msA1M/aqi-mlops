@@ -1,0 +1,108 @@
+==========================================
+FASTAPI MANUAL TEST DATA
+==========================================
+
+Open: http://127.0.0.1:8000/docs
+Then click on POST /predict/aqi → Try it out → paste JSON below
+
+==========================================
+TEST 1: Default/Moderate Air Quality
+==========================================
+{
+  "co": 0.4,
+  "co2": 410.0,
+  "no2": 20.0,
+  "so2": 5.0,
+  "o3": 30.0,
+  "pm25": 45.0,
+  "pm10": 70.0,
+  "aqi_lag_1": 85.0,
+  "aqi_lag_3": 80.0,
+  "aqi_lag_6": 75.0,
+  "aqi_roll_mean_3": 82.0,
+  "aqi_roll_std_3": 4.1
+}
+
+==========================================
+TEST 2: Good Air Quality
+==========================================
+{
+  "co": 0.2,
+  "co2": 380.0,
+  "no2": 10.0,
+  "so2": 2.0,
+  "o3": 20.0,
+  "pm25": 15.0,
+  "pm10": 25.0,
+  "aqi_lag_1": 35.0,
+  "aqi_lag_3": 32.0,
+  "aqi_lag_6": 30.0,
+  "aqi_roll_mean_3": 33.0,
+  "aqi_roll_std_3": 2.5
+}
+
+==========================================
+TEST 3: Moderate Air Quality
+==========================================
+{
+  "co": 0.6,
+  "co2": 450.0,
+  "no2": 35.0,
+  "so2": 8.0,
+  "o3": 50.0,
+  "pm25": 60.0,
+  "pm10": 90.0,
+  "aqi_lag_1": 75.0,
+  "aqi_lag_3": 70.0,
+  "aqi_lag_6": 65.0,
+  "aqi_roll_mean_3": 70.0,
+  "aqi_roll_std_3": 5.0
+}
+
+==========================================
+TEST 4: Unhealthy Air Quality
+==========================================
+{
+  "co": 1.2,
+  "co2": 520.0,
+  "no2": 60.0,
+  "so2": 15.0,
+  "o3": 80.0,
+  "pm25": 100.0,
+  "pm10": 150.0,
+  "aqi_lag_1": 130.0,
+  "aqi_lag_3": 125.0,
+  "aqi_lag_6": 120.0,
+  "aqi_roll_mean_3": 125.0,
+  "aqi_roll_std_3": 8.0
+}
+
+==========================================
+TEST 5: Hazardous Air Quality
+==========================================
+{
+  "co": 2.5,
+  "co2": 600.0,
+  "no2": 90.0,
+  "so2": 30.0,
+  "o3": 120.0,
+  "pm25": 150.0,
+  "pm10": 200.0,
+  "aqi_lag_1": 180.0,
+  "aqi_lag_3": 175.0,
+  "aqi_lag_6": 170.0,
+  "aqi_roll_mean_3": 175.0,
+  "aqi_roll_std_3": 12.0
+}
+
+==========================================
+HOW TO USE:
+==========================================
+1. Make sure FastAPI is running: uvicorn api.main:app --reload
+2. Open browser: http://127.0.0.1:8000/docs
+3. Find "POST /predict/aqi" endpoint
+4. Click "Try it out"
+5. Paste any JSON above into the Request body field
+6. Click "Execute"
+7. See the response below!
+

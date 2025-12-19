@@ -1,0 +1,17 @@
+domain,city,feature,psi
+AQI,Brasilia,pm25,2.0092
+AQI,Brasilia,pm10,3.9376
+AQI,Brasilia,no2,4.1036
+AQI,Brasilia,o3,0.24
+Weather,Brasilia,temperature,1.2873
+Weather,Brasilia,humidity,0.2924
+Weather,Brasilia,wind_speed,0.4772
+Weather,Brasilia,pressure,1.3607
+Weather,Karachi,temperature,1.4825
+Weather,Karachi,humidity,0.2121
+Weather,Karachi,wind_speed,0.3419
+Weather,Karachi,pressure,1.9697
+Weather,London,temperature,3.536
+Weather,London,humidity,1.1239
+Weather,London,wind_speed,1.8723
+Weather,London,pressure,2.5309

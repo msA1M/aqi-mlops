@@ -1,0 +1,28 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./mlruns:/app/mlruns
+    environment:
+      - MLFLOW_TRACKING_URI=file:/app/mlruns
+      - ALERT_EMAIL=msaim22112003@gmail.com
+      - ALERT_EMAIL_PASSWORD=dorluvldeebaeeeh
+      - ALERT_RECEIVER_EMAIL=muhammad.saim221103@gmail.com
+
+  ui:
+    build:
+      context: .
+      dockerfile: Dockerfile.ui
+    ports:
+      - "8501:8501"
+    volumes:
+      - ./mlruns:/app/mlruns
+      - ./feature_store:/app/feature_store
+    depends_on:
+      - api
+    environment:
+      - API_URL=http://api:8000
