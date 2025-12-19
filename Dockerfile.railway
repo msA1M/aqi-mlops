@@ -24,7 +24,7 @@ RUN mkdir -p /app/mlruns
 # Copy MLflow tracking directory with model artifacts
 # Essential model files are force-added to git (see .gitignore exceptions)
 # This will copy the tracked model artifacts into the container
-COPY mlruns/ ./mlruns/ || echo "Note: Some mlruns files may be missing, models loaded from direct paths"
+COPY mlruns/ ./mlruns/
 
 # MLflow will read models from this local tracking URI  
 ENV MLFLOW_TRACKING_URI=file:/app/mlruns
