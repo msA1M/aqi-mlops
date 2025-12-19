@@ -48,7 +48,7 @@ Thumbs.db
 *.ipynb
 
 # MLflow
-# Exclude most mlruns but keep models for deployment
+# Exclude most mlruns but keep essential model artifacts for deployment
 mlruns/*
 !mlruns/models/
 mlruns/models/*
@@ -58,6 +58,12 @@ mlruns/models/**/version-*/*
 !mlruns/models/**/version-*/**/*.pkl
 !mlruns/models/**/version-*/**/model.pkl
 !mlruns/models/**/meta.yaml
+# Allow experiment directory for model artifacts
+!mlruns/481652201472430433/
+!mlruns/481652201472430433/models/
+!mlruns/481652201472430433/models/m-168880ff890a4a9bb3f7b210da76d290/
+!mlruns/481652201472430433/models/m-168880ff890a4a9bb3f7b210da76d290/artifacts/
+!mlruns/481652201472430433/models/m-168880ff890a4a9bb3f7b210da76d290/artifacts/**
 mlartifacts/
 .mlflow/
 

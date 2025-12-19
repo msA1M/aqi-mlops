@@ -18,10 +18,11 @@ COPY feature_store ./feature_store
 COPY utils ./utils
 COPY alerts ./alerts
 
-# Copy MLflow tracking directory so the registered model can be loaded
-COPY --chown=root:root mlruns ./mlruns
+# Copy MLflow tracking directory with model artifacts
+# Essential model files are force-added to git (see .gitignore exceptions)
+COPY mlruns ./mlruns
 
-# MLflow will read models from this local tracking URI
+# MLflow will read models from this local tracking URI  
 ENV MLFLOW_TRACKING_URI=file:/app/mlruns
 
 # Railway provides PORT environment variable
