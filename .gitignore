@@ -58,12 +58,27 @@ mlruns/models/**/version-*/*
 !mlruns/models/**/version-*/**/*.pkl
 !mlruns/models/**/version-*/**/model.pkl
 !mlruns/models/**/meta.yaml
-# Allow experiment directory for model artifacts
+# Allow experiment directory for AQI model artifacts
 !mlruns/481652201472430433/
 !mlruns/481652201472430433/models/
 !mlruns/481652201472430433/models/m-168880ff890a4a9bb3f7b210da76d290/
 !mlruns/481652201472430433/models/m-168880ff890a4a9bb3f7b210da76d290/artifacts/
 !mlruns/481652201472430433/models/m-168880ff890a4a9bb3f7b210da76d290/artifacts/**
+# Allow experiment directory for Weather model artifacts
+!mlruns/931917419341530721/
+!mlruns/931917419341530721/models/
+!mlruns/931917419341530721/models/m-5d546946af9a4d1fb6f3931fb8b8ad11/
+!mlruns/931917419341530721/models/m-5d546946af9a4d1fb6f3931fb8b8ad11/artifacts/
+!mlruns/931917419341530721/models/m-5d546946af9a4d1fb6f3931fb8b8ad11/artifacts/**
+!mlruns/931917419341530721/models/m-ea1bfddfa17d4197aebb7ea8d942dd70/
+!mlruns/931917419341530721/models/m-ea1bfddfa17d4197aebb7ea8d942dd70/artifacts/
+!mlruns/931917419341530721/models/m-ea1bfddfa17d4197aebb7ea8d942dd70/artifacts/**
+!mlruns/931917419341530721/models/m-0fb51f2d25c14992bf71e4839b320ba7/
+!mlruns/931917419341530721/models/m-0fb51f2d25c14992bf71e4839b320ba7/artifacts/
+!mlruns/931917419341530721/models/m-0fb51f2d25c14992bf71e4839b320ba7/artifacts/**
+!mlruns/931917419341530721/models/m-dbd425c1079c46ea842f8c711b02de89/
+!mlruns/931917419341530721/models/m-dbd425c1079c46ea842f8c711b02de89/artifacts/
+!mlruns/931917419341530721/models/m-dbd425c1079c46ea842f8c711b02de89/artifacts/**
 mlartifacts/
 .mlflow/
 
